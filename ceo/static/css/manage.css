@@ -9,7 +9,7 @@
             background-color:rgb(39,37,37);;
             margin-top:7px;
         }
-        #logout{
+        #logout, #login{
             display: inline-block;
             color:white;
             font-weight: bold;
