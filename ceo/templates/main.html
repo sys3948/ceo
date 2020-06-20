@@ -71,21 +71,22 @@
     </nav>
     <!--content-->
     <ul id="main-content">
+        {% for recipe in recipes %}
         <li>
             <div class="img-section">
-                <img src="{% static 'img/test.png' %}" width="198" height="158">
-                <p class="opacity-text">디저트</p>
+                <img src="/media/{{recipe.recipe_img_file_path}}" width="198" height="158">
+                <p class="opacity-text">{{recipe.recipe_kind}}</p>
             </div>
             <div class="res-info">
                 <i class="glyphicon glyphicon-user"></i>
                 <span>관리자</span>
                 <div class="text-right" style="width:116px; float: right;">
                     <i class="glyphicon glyphicon-thumbs-up"></i>
-                    <span>100</span>
+                    <span>{{recipe.recommendation}}</span>
                 </div>
             </div>
         </li>
-        
+        {% endfor %}
     </ul>
 <script src="{% static 'js/main.js' %}"></script>    
 </body>

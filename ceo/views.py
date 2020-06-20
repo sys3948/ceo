@@ -14,11 +14,12 @@ def check_login(request,url):
     return user_id if user_id else redirect(url)
     
 # Create your views here.
-class IndexView(generic.ListView):
-    template_name = 'main.html'
-
-    def get_queryset(self):
-        Recipe.objects.order_by('upload_date')
+def main(request):
+    recipes = Recipe.objects.all().order_by('-upload_date')
+    
+    return render(request,'main.html',{'recipes':recipes})
+def detail_recipe(request):
+    return render(request,'detail_recipe.html')    
 # 로그인
 def login(request):
     context = {}
@@ -89,13 +90,61 @@ class ManagerRecipeView(generic.ListView):
 
 
 def ManagerWriteRecipeView(request):
-    if not request.session.get('id'):
-        # redirect 하기!
-        print('None Session!!')
-    
+    user_id = check_login(request,'/')
+    account = get_object(Account,user_id=id)
+    #if account.level != 1 : return redirect('/')
+    if request.method == "POST":
+        print()
+        recipe = Recipe.objects.create(
+                    recipe_name=request.POST.get('title'),
+                    rank = int(request.POST.get('rank')),
+                    recipe_img_file_path = request.FILES.get('recipe_img'),
+                    video_file_path = request.FILES.get('recipe_video'),
+                    recipe_kind   = request.POST.get('kind')
+                )
+        
+        url  = "media/recipe/doc/"+"recipe"+str(recipe.pk)+".html"
+        url2 = "media/recipe/doc/"+"nutrition"+str(recipe.pk)+".html"
+        with open(url, "w",encoding="UTF-8") as f:
+            f.write(request.POST.get('recipe_info'))
+        with open(url2,"w",encoding="UTF-8") as f:
+            f.write(request.POST.get('info'))
+        recipe.nutrition_document_file_path = url2 
+        recipe.document_file_path = url
+        recipe.save()
+        for food in request.POST.get('food').split(','):
+            food = food.replace(" ","")
+            food_obj = get_object(Foodstuff,foodstuff_name=food)
+            RFRealatoin.objects.create(
+                recipe=recipe,
+                foodstuff=food_obj
+            )
+
     return render(request, 'write_recipe.html')
 
-
+def manage_recipe(request):
+    recipes = Recipe.objects.all().order_by('-upload_date')
+    
+    return render(request, 'manage_recipe.html',{'recipes':recipes})
+def modify_recipe(request):
+    pk = request.GET.get('id')
+    recipe = get_object_or_404(Recipe,id=pk)
+    realation_list = RFRealatoin.objects.filter(recipe=recipe)
+    url = str(recipe.nutrition_document_file_path)
+    url2= str(recipe.document_file_path)
+    nur_doc = None
+    rec_doc = None
+    with open(url, "r",encoding="UTF-8") as f:
+        nur_doc=f.read()
+    with open(url2, "r",encoding="UTF-8") as f:
+        rec_doc=f.read()    
+    context = {
+        'relation_list':realation_list,
+        'recipe':recipe,
+        'nur_doc':nur_doc,
+        'rec_doc':rec_doc
+    }
+    return render(request, 'modify_recipe.html',context)
 class ManagerStorageView(generic.ListView):
     model = Recipe
     template_name = 'manage_storage.html'
