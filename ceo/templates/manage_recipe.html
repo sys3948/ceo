@@ -1,24 +1,33 @@
 {% extends 'manage.html' %}
 {% block content%}
-<!--내용-->
-<div id="content" class="col-md-8">
-    <h2 class="text-center">레시피 등록</h2>
-    <form class="recipe_form">
-        <h4>제목</h4>
-        <input type="text" id="recipe_name" class="form-control">
-        <h4>열량 & 영양정보</h4>
-        <div class="summernote"></div>
-        <h4>레시피</h4>
-        <div class="upload-btn">동영상업로드</div>
-        <div class="summernote"></div>
-        <h4>재료</h4>
-        <input type="text" id="foodStuff" class="form-control" placeholder="재료명1,재료명2,재료명3">
-        <input type="submit" id="submit" value="작성하기">
-    </form>
-</div>
-        <!-- <div id="summernote">Hello Summernote</div> -->
-<script src="{% static 'js/manage.js' %}"></script>
-<script src="{% static 'js/write.js' %}"></script>        
+{% load static %}
+<!--content-->
+
+<ul id="manage-content" class="col-md-10">
+    {% for recipe in recipes %}
+    <li>
+        <div class="img-section">
+            <img src="/media/{{recipe.recipe_img_file_path}}" width="198" height="158">
+            <p class="opacity-text">디저트</p>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-info" onclick="location='/manager/modify/recipe?id={{recipe.pk}}'">수정</button>
+            <button class="btn btn-danger">삭제</button>    
+        </div>
+        
+    </li>
+    {% endfor %}
+    
+</ul>
+<script>
+    $("#recipe").attr("on-off","on");
+    $("#manage-recipe").css({
+        "background":"white",
+        "color":"black"
+    });
+</script>  
+<script src="{% static 'js/manage.js' %}"></script>   
+
 {% endblock %}
     
     

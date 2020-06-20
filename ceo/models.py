@@ -16,12 +16,13 @@ class Account(models.Model):
 class Recipe(models.Model):
     # 레시피 모델
     recipe_name = models.CharField(max_length = 100, db_index = True, unique = True) # 레시피 제목
-    rank = models.IntegerField() # 난이도
-    recommendation = models.IntegerField() # 추천수
+    rank = models.IntegerField(default=0) # 난이도
+    recommendation = models.IntegerField(default=0) # 추천수
     upload_date = models.DateField(auto_now_add=True) # 작성날짜
+    recipe_kind = models.CharField(max_length = 10,null=True,blank=True) #종류
     recipe_img_file_path = models.ImageField(upload_to="recipe/img/",null=True,blank=True) # 레시피 완성 요리 이미지 파일 주소
-    nutrition_document_file_path = models.CharField(max_length = 300) # 영양정보
-    video_file_path = models.FileField(upload_to="recipe/video/") # 동영상 파일주소
+    nutrition_document_file_path = models.CharField(max_length = 300,null=True,blank=True) # 영양정보
+    video_file_path = models.FileField(upload_to="recipe/video/", null=True,blank=True) # 동영상 파일주소
     document_file_path = models.FileField() # 문서 파일주소
 
 

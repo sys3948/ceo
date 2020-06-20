@@ -4,18 +4,45 @@
     <!--내용-->
     <div id="content" class="col-md-8">
         <h2 class="text-center">레시피 등록</h2>
-        <form class="recipe_form">
+        <form   action="{% url 'write_recipe' %}" method="POST" enctype="multipart/form-data" onsubmit="return isVaild();">
+            {% csrf_token %}
             <h4>제목</h4>
-            <input type="text" id="recipe_name" class="form-control">
+            <input type="text" name="title" id="recipe_name" class="form-control">
             <h4>열량 & 영양정보</h4>
-            <div class="summernote"></div>
+            <div class="summernote" id="summ-info"></div>
+            <input type="hidden" id="info" name="info">
             <h4>레시피</h4>
-            <input type="file" id="storageVideo" class="upload-file" onchange="check_file(this);"/>
+            <input type="file" accept="image/*" id="imgFile" class="upload-file" name="recipe_img"/>
+            <label for="imgFile" class="upload-btn">레시피이미지</label>
+            <img id="previewImg" src="" />
+
+           
+            <input type="file" accept="video/*" name="recipe_video" id="storageVideo" class="upload-file" onchange="check_file(this);"/>
             <label for="storageVideo" class="upload-btn">동영상업로드</label>
             <p id="file-name"></p>
-            <div class="summernote"></div>
+            <div class="summernote" id="summ-recipe-info"></div>
+            <input type="hidden" id="recipe-info" name="recipe_info">
             <h4>재료</h4>
-            <input type="text" id="foodStuff" class="form-control" placeholder="재료명1,재료명2,재료명3">
+            <input type="text" id="foodStuff" class="form-control" name="food" placeholder="재료명1,재료명2,재료명3">
+            <h4>레시피종류</h4>
+            <select class="form-control" name="kind">
+                <option value="디저트">디저트</option>
+                <option value="밑반찬">밑반찬</option>
+                <option value="찌개">찌개</option>
+                <option value="죽">죽</option>
+                <option value="구이">구이</option>
+                <option value="찜">찜</option>
+                <option value="볶음">볶음</option>
+                <option value="튀김">튀김</option>
+            </select>
+            <h4>난이도</h4>
+            <select class="form-control" name="rank">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
             <input type="submit" id="submit" value="작성하기">
         </form>
         
@@ -30,8 +57,22 @@
         });
 
         function check_file(file){
-            console.log(file.value);
+            //	*.mkv *.avi *.mp4 *.mpg *.flv *.wmv *.asf *.asx *.ogm *.ogv *.mov
+            var exd_list = ["mkv","avi","mp4","mpg","flv","wmv","asf","asx","orm","ogv","mov"];
             var path = file.value;
+            var extend = path.slice(path.indexOf(".") + 1).toLowerCase(); 
+            if(exd_list.indexOf(extend)){
+                alert("동영상 파일이 아닙니다.");
+            }
+        }
+        function isVaild(){
+            var summ_info = $('#summ-info').summernote('code');
+            var summ_recipe_info = $("#summ-recipe-info").summernote('code');
+            console.log(summ_recipe_info);
+            $("#info").val(summ_info);
+            $("#recipe-info").val(summ_recipe_info);
+            
+            return true;
         }
     </script>
     <script src="{% static 'js/manage.js' %}"></script>

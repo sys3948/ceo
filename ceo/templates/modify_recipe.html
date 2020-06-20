@@ -1,0 +1,98 @@
+{% extends 'manage.html' %}
+{% block content %}
+{% load static %}
+    <!--내용-->
+    <div id="content" class="col-md-8">
+        <h2 class="text-center">레시피 등록</h2>
+        <form   action="{% url 'write_recipe' %}" method="POST" enctype="multipart/form-data" onsubmit="return isVaild();">
+            {% csrf_token %}
+            <h4>제목</h4>
+            <input type="text" name="title" id="recipe_name" value="{{recipe.recipe_name}}" class="form-control">
+            <h4>열량 & 영양정보</h4>
+            <div class="summernote" id="summ-info">
+                {{nur_doc|safe}}
+            </div>
+            <input type="hidden" id="info" name="info">
+            <h4>레시피</h4>
+            <input type="file" accept="image/*" id="imgFile" class="upload-file" name="recipe_img"/>
+            <label for="imgFile" class="upload-btn">레시피이미지</label>
+            <img id="previewImg" src="/media/{{recipe.recipe_img_file_path}}" />
+
+           
+            <input type="file" accept="video/*" name="recipe_video" id="storageVideo" class="upload-file" onchange="check_file(this);"/>
+            <label for="storageVideo" class="upload-btn">동영상업로드</label>
+            <p id="file-name"></p>
+            <div class="summernote" id="summ-recipe-info">
+                {{rec_doc|safe}}
+            </div>
+            {% for re in realation_list %}
+                <input type="hidden" class="food-name" value="{{re.foodstuff.foodstuff_name}}">
+            {% endfor %}
+            <input type="hidden" id="recipe-info" name="recipe_info">
+            <h4>재료</h4>
+            <input type="text" id="foodStuff" class="form-control" name="food" placeholder="재료명1,재료명2,재료명3">
+            <h4>레시피종류</h4>
+            <select class="form-control" name="kind">
+                <option class="kind-opt" value="1">디저트</option>
+                <option class="kind-opt" value="2">밑반찬</option>
+                <option class="kind-opt" value="3">찌개</option>
+                <option class="kind-opt" value="4">죽</option>
+                <option class="kind-opt" value="5">구이</option>
+                <option class="kind-opt" value="6">찜</option>
+                <option class="kind-opt" value="7">볶음</option>
+                <option class="kind-opt" value="8">튀김</option>
+            </select>
+            <h4>난이도</h4>
+            <select class="form-control" name="rank">
+                <option  class="rank-opt" value="1">1</option>
+                <option  class="rank-opt" value="2">2</option>
+                <option  class="rank-opt" value="3">3</option>
+                <option  class="rank-opt" value="4">4</option>
+                <option  class="rank-opt" value="5">5</option>
+            </select>
+            <input type="submit" id="submit" value="작성하기">
+        </form>
+        
+        <!-- <div id="summernote">Hello Summernote</div> -->
+
+    </div>
+    <script>
+        init();
+        function init(){
+            var rank_index = parseInt("{{recipe.rank}}");
+            var kind_index = parseInt("{{recipe.recipe_kind}}");
+            
+             $($(".kind-opt")[kind_index]).attr("selected", true);
+             $($(".rank-opt")[rank_index]).attr("selected", true);
+             $("#foodStuff").val($(".food-name").join(","));
+
+            
+        }
+        $("#recipe").attr("on-off","on");
+        $("#manage-recipe").css({
+            "background":"white",
+            "color":"black"
+        });
+
+        function check_file(file){
+            //	*.mkv *.avi *.mp4 *.mpg *.flv *.wmv *.asf *.asx *.ogm *.ogv *.mov
+            var exd_list = ["mkv","avi","mp4","mpg","flv","wmv","asf","asx","orm","ogv","mov"];
+            var path = file.value;
+            var extend = path.slice(path.indexOf(".") + 1).toLowerCase(); 
+            if(exd_list.indexOf(extend)){
+                alert("동영상 파일이 아닙니다.");
+            }
+        }
+        function isVaild(){
+            var summ_info = $('#summ-info').summernote('code');
+            var summ_recipe_info = $("#summ-recipe-info").summernote('code');
+            console.log(summ_recipe_info);
+            $("#info").val(summ_info);
+            $("#recipe-info").val(summ_recipe_info);
+            
+            return true;
+        }
+    </script>
+    <script src="{% static 'js/manage.js' %}"></script>
+    <script src="{% static 'js/write.js' %}"></script>
+{% endblock %}
