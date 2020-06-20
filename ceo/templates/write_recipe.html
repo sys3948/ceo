@@ -1,64 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>레시피등록</title>
-    
-
-    <!--header css-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/manage.css' %}">
-
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-    <link href="{% static 'css/write.css' %}" rel="stylesheet">
-    <style> nav{ height: 130%;;}</style>
-</head>
-<body>
-    <!--헤더-->
-    <header>
-        <div>
-            <img src="{% static 'img/icon.png' %}">
-            <a href="" id="logout">로그아웃</a>
-        </div>
-    </header>
-    <!--네비게이션-->
-    <nav class="col-md-2">
-        <ul id="menu">
-            <!--레시피-->
-            <li class="menu-on-off" on-off="on">
-                <span class="menu-left">레시피</span>
-                <i class="glyphicon glyphicon-chevron-right"></i>
-                
-            </li>
-            <ul class="item-list">
-                <li class="menu-item" style="color:black; background:white;" value="레시피등록">
-                    레시피등록
-                </li>
-                <li class="menu-item" value="레시피관리">
-                    레시피관리
-                </li>
-            </ul>
-            <!--보관방법-->
-            <li class="menu-on-off" on-off="off">
-                <span class="menu-left">보관방법</span>
-                <i class="glyphicon glyphicon-chevron-right"></i>
-            </li>
-            <ul class="item-list">
-                <li class="menu-item" value="보관방법작성">
-                    보관방법작성
-                </li>
-                <li class="menu-item" value="보관방법관리">
-                    보관방법관리
-                </li>
-            </ul>
-        </ul>
-    </nav>
+{% extends 'manage.html' %}
+{% block content %}
+{% load static %}
     <!--내용-->
     <div id="content" class="col-md-8">
         <h2 class="text-center">레시피 등록</h2>
@@ -68,7 +10,9 @@
             <h4>열량 & 영양정보</h4>
             <div class="summernote"></div>
             <h4>레시피</h4>
-            <div class="upload-btn">동영상업로드</div>
+            <input type="file" id="storageVideo" class="upload-file" onchange="check_file(this);"/>
+            <label for="storageVideo" class="upload-btn">동영상업로드</label>
+            <p id="file-name"></p>
             <div class="summernote"></div>
             <h4>재료</h4>
             <input type="text" id="foodStuff" class="form-control" placeholder="재료명1,재료명2,재료명3">
@@ -78,7 +22,18 @@
         <!-- <div id="summernote">Hello Summernote</div> -->
 
     </div>
+    <script>
+        $("#recipe").attr("on-off","on");
+        $("#write-recipe").css({
+            "background":"white",
+            "color":"black"
+        });
+
+        function check_file(file){
+            console.log(file.value);
+            var path = file.value;
+        }
+    </script>
     <script src="{% static 'js/manage.js' %}"></script>
     <script src="{% static 'js/write.js' %}"></script>
-</body>
-</html>
+{% endblock %}
