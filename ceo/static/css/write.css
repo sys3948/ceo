@@ -22,6 +22,11 @@
     line-height: 43px;;
     cursor: pointer;
 }
+#previewImg{
+    max-width: 300px;
+    display: block;
+}
+
 #submit{
     width:300px;
     height: 40px;

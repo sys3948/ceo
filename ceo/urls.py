@@ -12,5 +12,5 @@ urlpatterns = [
     path('manager/show/recipe', views.ManagerRecipeView.as_view(), name='show_recipe'),
     path('manager/write/recipe', views.ManagerWriteRecipeView, name='write_recipe'),
     path('manager/show/storage', views.ManagerStorageView.as_view(), name='show_storage'),
-    path('manager/write/storage', views.ManagerWriteStorageView.as_view(), name='write_storage'),
+    path('manager/write/storage', views.ManagerWriteStorageView, name='write_storage'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

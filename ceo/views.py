@@ -78,6 +78,12 @@ class ManagerStorageView(generic.ListView):
     template_name = 'manage_storage.html'
 
 
-class ManagerWriteStorageView(generic.ListView):
-    model = Recipe
-    template_name = 'write_storage.html'
+# class ManagerWriteStorageView(generic.ListView):
+#     model = Recipe
+#     template_name = 'write_storage.html'
+
+
+def ManagerWriteStorageView(request):
+    if request.method == 'POST':
+        print(request.POST)
+    return render(request, 'write_storage.html')

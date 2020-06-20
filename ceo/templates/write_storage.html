@@ -63,15 +63,52 @@
     <div id="content" class="col-md-8">
         <h2 class="text-center">보관방법 작성</h2>
         <form class="storage_form">
+            {% csrf_token %}
             <h4>제목</h4>
-            <input type="text" class="form-control">
+            <input type="text" id="storageName" class="form-control">
             <h4>재료이미지</h4>
-            <input type="file" accept="image/*" id="storageImgFile" class="upload-file" value="재료이미지 업로드" />
-            <label for="storageImgFile" class="upload-btn">재료 이미지</label>
+            <input type="file" accept="image/*" id="imgFile" class="upload-file" value="재료이미지 업로드" />
+            <label for="imgFile" class="upload-btn">재료 이미지</label>
+            <img id="previewImg" src="" />
             <h4>재료보관방법</h4>
             <div class="summernote"></div>
             
             <input type="submit" id="submit" value="작성하기">
+            <script>
+                $('.storage_form').submit((e) => {
+                    e.preventDefault();
+                    var storageName = document.getElementById('storageName').value;
+                    var storageDoc = document.querySelector('.note-editable').innerText.replace(/(\s*)/g,"");
+                    var img = document.getElementById('imgFile').value;
+                    if(!img){
+                        img = 'non-img.png';
+                    }
+                    if(!storageName || !storageDoc){
+                        alert("제목 또는 내용이 작성되어 있지 않습니다.")
+                    }else{
+                        
+                        $.ajax({
+                            type: "post",
+                            url: "/manager/write/storage",
+                            contentType: false,
+                            processData: false,
+                            data: {
+                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                'storageName': storageName,
+                                'storageDoc': document.querySelector('.note-editable').innerHTML,
+                                'storageImg': img,
+                            },
+                            success: (response) =>{
+                                if(response.confirm){
+                                    location.replace('/manager/show/storage');
+                                }else{
+                                    alert('오류발생! \n' + response.msg);
+                                }
+                            }
+                        });
+                    }
+                });
+            </script>
         </form>
         
         <!-- <div id="summernote">Hello Summernote</div> -->
