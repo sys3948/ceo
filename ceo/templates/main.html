@@ -29,7 +29,11 @@
         </div>
         <diV id="header-right-section">
             <i class="glyphicon glyphicon-search" style="color:rgb(181,181,181); cursor: pointer; font-size: 16px;"></i>
-            <a href="login.html" >로그인</a>
+            {% if request.session.id %}
+                <a href="{% url 'logout' %}" >로그아웃</a>
+            {% else %}    
+                <a href="{% url 'login' %}" >로그인</a>
+            {% endif %}
             <a href="">장바구니</a>
         </diV>
     </header>

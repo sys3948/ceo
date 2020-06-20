@@ -13,6 +13,9 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
+    {% if lgmsg %}
+        <script>alert("{{lgmsg}}");</script>
+    {% endif %}
     <header>
         <div>
             <img src="{% static 'img/icon.png' %}">
@@ -24,18 +27,18 @@
             <span id="vertical-bar"></span>
             로그인
         </p>
-        <form id="form">
-            
+        <form id="form" action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
             <span>아이디</span>
-            <input type="text" class="form-control" required><br>
+            <input type="text" class="form-control" name="user_id" required><br>
             <span>비밀번호</span>
-            <input type="password" class="form-control" required>
+            <input type="password" class="form-control" name="user_pw" required>
             
             <input type="submit" id="login-btn" value="로그인" style="width:138px;">
             <br>
             
         </form>
-        <a href="register.html">회원가입</a>
+        <a href="{% url 'register' %}">회원가입</a>
         <a href="">아이디찾기/비밀번호찾기</a>
     </div>
 </body>
