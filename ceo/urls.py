@@ -5,8 +5,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('login', views.LoginView.as_view(), name='login'),
-    path('register', views.RegisterView.as_view(), name='register'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+    path('register/', views.register, name='register'),
+    path('idCheck/',views.id_check,name="idCheck"),
     path('manager/show/recipe', views.ManagerRecipeView.as_view(), name='show_recipe'),
     path('manager/write/recipe', views.ManagerWriteRecipeView.as_view(), name='write_recipe'),
     path('manager/show/storage', views.ManagerStorageView.as_view(), name='show_storage'),

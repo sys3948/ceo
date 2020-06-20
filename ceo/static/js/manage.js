@@ -7,9 +7,9 @@ $(".menu-on-off").click(function(){
 });
 $(".menu-item").click(function(){
     var keyword = $(this).attr("value");
-    if(keyword == "레시피등록") location.href="write_recipe.html";
+    if(keyword == "레시피등록") location.href="/manager/write/recipe";
     else if(keyword == "레시피관리") location.href="manage_recipe.html";
-    else if(keyword == "보관방법작성") location.href="write_storage.html";
+    else if(keyword == "보관방법작성") location.href="/manager/write/storage";
     else location.href="manage_storage.html";
 
 });
