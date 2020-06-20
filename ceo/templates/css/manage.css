@@ -1,0 +1,47 @@
+*{margin:0; padding:0;}
+        html,body{height: 100%; overflow: auto;}
+        header{
+            width:100%;
+            position: relative;
+        }
+        nav{
+            height: 100%;
+            background-color:rgb(39,37,37);;
+            margin-top:7px;
+        }
+        #logout{
+            display: inline-block;
+            color:white;
+            font-weight: bold;
+            position: absolute;
+            right: 15px;
+            top:26px;
+        }
+        ul{
+            list-style: none;
+        }
+        .menu-on-off,
+        .menu-item{
+            width:100%;
+            
+            color:rgb(210,210,210);
+            font-size: 20px;
+            font-weight: bold;
+            margin-top:20px;
+            cursor: pointer;
+        }
+        .item-list{
+            display: none;
+        }
+       
+        .menu-left{
+            display: inline-block;
+            width: 86%;
+
+        }
+        .menu-item{
+            width:100%;
+            padding: 10px;
+            padding-left: 15px;
+            font-size: 15px;
+        }

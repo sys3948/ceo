@@ -1,0 +1,29 @@
+#manage-content{
+    margin-top:7px;
+}        
+.img-section{
+    width:198px;
+    height:158px;
+    cursor: pointer;
+    position: relative;
+}
+
+.opacity-text{
+    width:198px;
+    height:35px;
+    position: absolute;
+    bottom:-9px;
+    opacity: 0.7;
+    background-color: rgb(0,0,0,0.7);
+    color:white;
+    font-weight: bold;
+    font-size: 15px;
+    padding-top:5px;
+    padding-left: 15px;;
+    
+}
+#manage-content li{
+    float: left;
+    margin-left: 83px;
+    margin-top:30px;
+}

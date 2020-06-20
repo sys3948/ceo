@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+    <!--header css-->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+<body>
+    <header>
+        <div>
+            <img src="{% static 'img/icon.png' %}">
+        </div>
+    </header>
+    <div id="container">
+        <h2 class="text-center">회원가입</h2>
+        <form id="form">
+            <h4>아이디</h4>
+            <input type="text" class="form-control">
+            <div id="check-btn">중복확인</div>
+            <h4>비밀번호</h4>
+            <input type="password" class="form-control">
+            <h4>비밀번호 확인</h4>
+            <input type="password" class="form-control">
+            <h4>이메일</h4>
+            <input type="email" class="form-control">
+            <h4>전화번호</h4>
+            <div class="input-group">
+                <input type="text" class="form-control">
+                <div class="input-group-btn">
+                    <button class="btn btn-default">
+                        인증
+                    </button>
+                </div>
+            </div>
+            <input type="text" class="form-control" placeholder="인증번호">
+            <h4>이름</h4>
+            <input type="text" class="form-control">
+            <h4>이용약관</h4>
+            <div id="terms-use">
+                제1조(목적)<br>
+                <br>
+                본 회원약관은 C.E.O(이하 '갑'라 한다)이 운영하는 <br>
+                인터넷관련 서비스(이하 '서비스'라 한다)를 이용함에 있어<br> 
+                관리자와 이용자(이하 '회원'라 한다)의 권리, 의무 및 책임사항을 <br>
+                규정함을 목적으로 한다.<br>
+                제2조 (약관의 효력)    
+            
+            </div>
+            <input type="radio"> <span style="font-weight: bold;">이용약관 동의합니다.</span><br>
+            <input type="submit" value="회원가입" id="submit">
+        </form>
+        
+    </div>
+</body>
+</html>
