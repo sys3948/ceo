@@ -17,6 +17,7 @@
     line-height: 30px;
     margin-left:520px;
     margin-top:10px;
+    cursor: pointer;
 
 }
 #terms-use{
@@ -26,6 +27,7 @@
     color:black;
     font-weight: bold;
     overflow-y: auto;
+    
 }
 #submit{
     display: block;
