@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout/', views.logout, name='logout'),
     path('register/', views.register, name='register'),
     path('idCheck/',views.id_check,name="idCheck"),
+    path('manage/register/',views.manage_register,name="manage_register"),
     path('manager/show/recipe', views.ManagerRecipeView.as_view(), name='show_recipe'),
     path('manager/write/recipe', views.ManagerWriteRecipeView, name='write_recipe'),
     path('manager/show/storage', views.ManagerStorageView.as_view(), name='show_storage'),

@@ -30,30 +30,35 @@
     <!--네비게이션-->
     <nav class="col-md-2">
         <ul id="menu">
+            
+             
+             <li id="manager_register" class="menu-on-off" on-off="off">
+                <span onclick="location.href='/manage/register/';">관리자등록</span>
+            </li>
             <!--레시피-->
-            <li class="menu-on-off" on-off="on">
+            <li id="recipe" class="menu-on-off" on-off="off">
                 <span class="menu-left">레시피</span>
                 <i class="glyphicon glyphicon-chevron-right"></i>
                 
             </li>
             <ul class="item-list">
-                <li class="menu-item" value="레시피등록">
+                <li id="write-recipe"class="menu-item" value="레시피등록">
                     레시피등록
                 </li>
-                <li class="menu-item" value="레시피관리">
+                <li id="manage-recipe" class="menu-item" value="레시피관리">
                     레시피관리
                 </li>
             </ul>
             <!--보관방법-->
-            <li class="menu-on-off" on-off="off">
+            <li id="storage" class="menu-on-off" on-off="off">
                 <span class="menu-left">보관방법</span>
                 <i class="glyphicon glyphicon-chevron-right"></i>
             </li>
             <ul class="item-list">
-                <li class="menu-item" value="보관방법작성">
+                <li id="write-storage" class="menu-item" value="보관방법작성">
                     보관방법작성
                 </li>
-                <li class="menu-item" value="보관방법관리">
+                <li id="manage-storage" class="menu-item" value="보관방법관리">
                     보관방법관리
                 </li>
             </ul>

@@ -5,7 +5,14 @@ import json
 
 from .models import *
 
-
+#객체 반환
+def get_object(model,**args):
+    query_set = model.objects.filter(**args)
+    return query_set[0] if query_set else None
+def check_login(request,url):
+    user_id = request.session.get('id')
+    return user_id if user_id else redirect(url)
+    
 # Create your views here.
 class IndexView(generic.ListView):
     template_name = 'main.html'
@@ -54,7 +61,23 @@ def id_check(request):
     print(response)
     return HttpResponse(json.dumps(response), content_type="application/json")
 
-    
+def manage_register(request):
+    user_id = check_login(request,'/')
+    account = get_object(Account,user_id=user_id)
+    if account.level != 2: return render(request,'main.html',{'msg':'권한이 없습니다.'})  
+    if request.method == "POST":
+        Account.objects.create(
+            user_id  = request.POST.get('user_id'),
+            password = request.POST.get('user_pwd'),
+            username = request.POST.get('user_name'),
+            email    = request.POST.get('user_email'),
+            phonenumber = request.POST.get('user_phone'),
+            level      = 1
+        )
+        return redirect('/')
+
+    return render(request,'manage_register.html')  
+        
 class ManagerRecipeView(generic.ListView):
     model = Recipe
     template_name = 'manage_recipe.html'
