@@ -36,5 +36,5 @@ class FSStorage(models.Model):
     # 재료 보관법 모델
     foodstuff = models.OneToOneField(Foodstuff,on_delete=models.CASCADE,null=True,blank=True)
     storage_name = models.CharField(max_length = 100, db_index = True, unique = True)
-    fss_img_file_path = models.ImageField(upload_to="fs_storage/",null=True,blank=True)
+    fss_img_file_path = models.ImageField(upload_to="fs_storage/img/",null=True,blank=True)
     storage_file_path = models.CharField(max_length = 300)

@@ -1,20 +1,23 @@
 {% extends 'manage.html' %}
 {% block content%}
+    {% load static %}
     <!--content-->
     <ul id="manage-content" class="col-md-10">
+        {% for fsstorage in fsstorages %}
         <li>
             <div class="img-section">
-                <img src="{% static 'img/test.png' %}" width="198" height="158">
-                
+                <a href="/manager/show/storage/{{fsstorage.id}}">
+                    <img src="/media/{{fsstorage.fss_img_file_path}}" width="198" height="158">
+                </a>                
             </div>
-            <p class="text-center" style="font-weight: bold;">보관방법 제목</p>
+            <p class="text-center" style="font-weight: bold;">{{fsstorage.storage_name}} 보관방법</p>
             <div class="text-center">
                 <button class="btn btn-info">수정</button>
                 <button class="btn btn-danger">삭제</button>    
             </div>
             
         </li>
-        
+        {% endfor %}
         
     </ul>
     <script src="{% static 'js/manage.js' %}"></script>

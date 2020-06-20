@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render,HttpResponse,redirect
 from django.urls import reverse
 from django.views import generic
 import json
+from .file_func import create_file
 
 from .models import *
 
@@ -9,9 +10,6 @@ from .models import *
 def get_object(model,**args):
     query_set = model.objects.filter(**args)
     return query_set[0] if query_set else None
-def check_login(request,url):
-    user_id = request.session.get('id')
-    return user_id if user_id else redirect(url)
     
 # Create your views here.
 class IndexView(generic.ListView):
@@ -62,7 +60,9 @@ def id_check(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def manage_register(request):
-    user_id = check_login(request,'/')
+    # user_id = check_login(request,'/')
+    if not request.session.get('id'):
+        return redirect('/')
     account = get_object(Account,user_id=user_id)
     if account.level != 2: return render(request,'main.html',{'msg':'권한이 없습니다.'})  
     if request.method == "POST":
@@ -96,10 +96,14 @@ def ManagerWriteRecipeView(request):
     return render(request, 'write_recipe.html')
 
 
-class ManagerStorageView(generic.ListView):
-    model = Recipe
-    template_name = 'manage_storage.html'
+# class ManagerStorageView(generic.ListView):
+#     model = Recipe
+#     template_name = 'manage_storage.html'
 
+
+def ManagerStorageView(request):
+    fsstorages = FSStorage.objects.all()
+    return render(request, 'manage_storage.html', {'fsstorages' : fsstorages})
 
 # class ManagerWriteStorageView(generic.ListView):
 #     model = Recipe
@@ -108,5 +112,33 @@ class ManagerStorageView(generic.ListView):
 
 def ManagerWriteStorageView(request):
     if request.method == 'POST':
-        print(request.POST)
-    return render(request, 'write_storage.html')
+        
+        fds = FSStorage.objects.filter(foodstuff = request.POST.get('storageName'))
+
+        if fds:
+            print("존재한다.")
+            response = {'confirm' : False, 'msg' : "작성된 보관법입니다."}            
+        else:
+            fds = Foodstuff.objects.filter(id = request.POST.get('storageName'))
+            filepath = create_file(fds[0].foodstuff_name, request.POST.get('storageDoc'))
+            FSStorage.objects.create(
+                foodstuff_id = request.POST.get('storageName'),
+                storage_name = fds[0].foodstuff_name,
+                fss_img_file_path = request.FILES.get('storageImg'),
+                storage_file_path = filepath
+            )
+            response = {'confirm' : True}
+
+        return HttpResponse(json.dumps(response), content_type="application/json")
+
+    foodstuffs = Foodstuff.objects.all()
+
+    return render(request, 'write_storage.html', {'foodstuffs' : foodstuffs})
+
+
+def ManagerStorageDetailView(request, id):
+    fss = FSStorage.objects.get(id = id)
+    if not fss:
+        return redirect('/')
+
+    return render(request, 'show_storage.html', {"fsstorage" : fss})

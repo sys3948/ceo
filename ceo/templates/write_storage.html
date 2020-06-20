@@ -5,43 +5,45 @@
     <!--내용-->
     <div id="content" class="col-md-8">
         <h2 class="text-center">보관방법 작성</h2>
-        <form class="storage_form">
+        <form class="storage_form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
->
-            <h4>제목</h4>
-            <input type="text" id="storageName" class="form-control">
+            <h4>재료</h4>
+            <select id="storageName" class="form-control">
+                {% for foodstuff in foodstuffs %}
+                <option value="{{ foodstuff.id }}">{{foodstuff.foodstuff_name}}</option>
+                {% endfor %}
+            </select>
             <h4>재료이미지</h4>
-            <input type="file" accept="image/*" id="imgFile" class="upload-file" value="재료이미지 업로드" />
+            <input type="file" accept="image/*" id="imgFile" name="storageImg" class="upload-file" value="재료이미지 업로드" />
             <label for="imgFile" class="upload-btn">재료 이미지</label>
             <img id="previewImg" src="" />
             <h4>재료보관방법</h4>
             <div class="summernote"></div>
-            
+            <input type="hidden" id="summernote-value" name="storageDoc" />
             <input type="submit" id="submit" value="작성하기">
             <script>
                 $('.storage_form').submit((e) => {
                     e.preventDefault();
                     var storageName = document.getElementById('storageName').value;
                     var storageDoc = document.querySelector('.note-editable').innerText.replace(/(\s*)/g,"");
-                    var img = document.getElementById('imgFile').value;
+                    var img = document.getElementById('imgFile').files[0];
                     if(!img){
-                        img = 'non-img.png';
+                        alert('이미지 설정이 되어있지 않습니다. 설정해주세요.');
                     }
                     if(!storageName || !storageDoc){
                         alert("제목 또는 내용이 작성되어 있지 않습니다.")
                     }else{
-                        
+                        var formData = new FormData();
+                        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                        formData.append('storageName',storageName);
+                        formData.append('storageDoc', document.querySelector('.note-editable').innerHTML);
+                        formData.append('storageImg', img);
                         $.ajax({
                             type: "post",
                             url: "/manager/write/storage",
+                            data: formData,
                             contentType: false,
                             processData: false,
-                            data: {
-                                'csrfmiddlewaretoken': '{{ csrf_token }}',
-                                'storageName': storageName,
-                                'storageDoc': document.querySelector('.note-editable').innerHTML,
-                                'storageImg': img,
-                            },
                             success: (response) =>{
                                 if(response.confirm){
                                     location.replace('/manager/show/storage');
@@ -50,6 +52,10 @@
                                 }
                             }
                         });
+                        // document.getElementById('summernote-value').value = $('.summernote').summernote('code');
+                        // console.log("Submit!!!!!!!!!!");
+                        // $('.storage_form').unbind('submit').submit();
+                        // return true
                     }
                 });
             </script>
