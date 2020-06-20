@@ -19,9 +19,9 @@ class Recipe(models.Model):
     rank = models.IntegerField() # 난이도
     recommendation = models.IntegerField() # 추천수
     upload_date = models.DateField(auto_now_add=True) # 작성날짜
-    recipe_img_file_path = models.ImageField(upload_to="recipe/",null=True,blank=True) # 레시피 완성 요리 이미지 파일 주소
+    recipe_img_file_path = models.ImageField(upload_to="recipe/img/",null=True,blank=True) # 레시피 완성 요리 이미지 파일 주소
     nutrition_document_file_path = models.CharField(max_length = 300) # 영양정보
-    video_file_path = models.FileField(upload_to="video/") # 동영상 파일주소
+    video_file_path = models.FileField(upload_to="recipe/video/") # 동영상 파일주소
     document_file_path = models.FileField() # 문서 파일주소
 
 
