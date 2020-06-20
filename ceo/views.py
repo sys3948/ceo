@@ -60,9 +60,17 @@ class ManagerRecipeView(generic.ListView):
     template_name = 'manage_recipe.html'
 
 
-class ManagerWriteRecipeView(generic.ListView):
-    model = Recipe
-    template_name = 'write_recipe.html'
+# class ManagerWriteRecipeView(generic.ListView):
+#     model = Recipe
+#     template_name = 'write_recipe.html'
+
+
+def ManagerWriteRecipeView(request):
+    if not request.session.get('id'):
+        # redirect 하기!
+        print('None Session!!')
+    
+    return render(request, 'write_recipe.html')
 
 
 class ManagerStorageView(generic.ListView):

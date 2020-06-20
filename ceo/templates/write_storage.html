@@ -62,11 +62,12 @@
     <!--내용-->
     <div id="content" class="col-md-8">
         <h2 class="text-center">보관방법 작성</h2>
-        <form>
+        <form class="storage_form">
             <h4>제목</h4>
             <input type="text" class="form-control">
             <h4>재료이미지</h4>
-            <div class="upload-btn">재료이미지 업로드</div>
+            <input type="file" accept="image/*" id="storageImgFile" class="upload-file" value="재료이미지 업로드" />
+            <label for="storageImgFile" class="upload-btn">재료 이미지</label>
             <h4>재료보관방법</h4>
             <div class="summernote"></div>
             
