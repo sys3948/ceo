@@ -42,6 +42,35 @@
             background: #e0e0e0;
             
         }
+        #food-list li span{
+            display: inline-block;
+            width:145px;
+            font-size: 15px;;
+            font-weight: bold;
+        }
+        #food-list li input{
+            width:50px;
+        }
+        #food-list li{
+            padding:22px;
+            border-bottom: 1px solid gray;
+        }
+        #food-meta span{
+            
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #buy-btn{
+            width:100px;
+            height:30px;
+            background: black;
+            color:white;
+            font-weight: bold;
+            text-align: center;
+            line-height: 30px;
+            margin-left:550px;
+            margin-top:20px;
+        }
     </style>
     
 </head>
@@ -70,45 +99,121 @@
     <div id="con">
         <div id="info">
             <div id="rec-img-section">
-                <img src="" width="200" height="200">
+                <img src="/media/{{recipe.recipe_img_file_path}}" width="200" height="200">
             </div>
             <div id="rec-info">
-                <h4>간장계란밥</h4>
+                <h4>{{recipe.recipe_name}}</h4>
                 <hr>
                 <div style="color:gray; font-size: 17px;">
                     <i class="glyphicon glyphicon-thumbs-up"></i>
                     좋아요
-                    <span style="margin-left: 527px;">10</span>
+                    <span style="margin-left: 527px;">{{recipe.recommendation}}</span>
                     
                 </div>
                 <hr>
                 <div style="color:gray; font-size: 17px;">
                     <span>난이도</span>
                     <span style="margin-left: 450px;">
-                        <img style="width:139px;"src="{% static 'img/star1.png'%}">
+                        <img style="width:139px;"src="/static/img/star{{recipe.rank}}.png">
                     </span>
                 </div>
                 <hr>
                 <select class="form-control" id="food-select">    
-                    <option>간장</option>
-                    <option>간장1</option>
-                    <option>간장2</option>
-                    <option>간장3</option>
+                    <option>재료선택</option>
+                    {% for realation in realations %}
+                        <option price="{{realation.foodstuff.price}}">{{realation.foodstuff.foodstuff_name}}</option>
+                    {% endfor %}
+                    
                 </select>
                 <ul id="food-list">
                     
                 </ul>
+                <div  class="text-right" id="food-meta" style="display:none;">
+                    <span style="margin-right: 10px;;">총금액</span>
+                    <span style="color:rgb(230,126,34);"><b id="total">0</b>원</span>
+                    <div id="buy-btn">재료구매</div>
+                </div>
             </div>
         </div>
+        {% if recipe.video_file_path%}
+        <div style="width:300px; margin:0 auto; margin-top:100px;">
+            <video controls width="300" class="text-center" >
+
+                <source src="/media/{{recipe.video_file_path}}"
+                        type="video/webm">
+            
+                <source src="/media/{{recipe.video_file_path}}"
+                        type="video/mp4">
+            </video>
+        </div>
+        {% endif %}
+        <h3 style="margin-top:90px;">재료</h3>
+        <ol style="margin-left: 21px;">
+            {% for realation in realations %}
+                <li><b>{{realation.foodstuff.foodstuff_name}}</b></li>
+            {% endfor %}
+        </ol>
+        <h3 style="margin-top:50px;">열랑 & 영양정보</h3>
+        <div id="nutrition" class="text-center"></div>
+        <h3 style="margin-top:50px;">레시피</h3>
+        <div id="recipe" class="text-center"></div>
+        <h3 style="margin-top:50px;">식재료 보관 방법</h3>
+        {% for s in storage %}
+            <div class="text-center">
+                <img width="200" height="200" src="/media/{{s.1}}">
+                {{s.2|safe}}
+            </div>
+        {% endfor %}
     </div>
+
 <script src="{% static 'js/main.js' %}"></script>    
 <script>
+    init();
+    function init(){
+        $("#nutrition").load("/{{recipe.nutrition_document_file_path}}")
+        $("#recipe").load("/{{recipe.document_file_path}}")
+    }
+
     $("#food-select").change(function() {
-        var tag = "<li>"+$(this).val()+"</li>";
-        $("#food-list").append(tag);
+        if($(this).val() != "재료선택"){
+            $("#food-meta").css("display","block");
+            var food_price = parseInt($("#food-select > option:selected").attr("price"));
+            var price = parseInt($("#total").text()) + food_price;
+            $("#total").text(price);
+            var number = $(".food").length + 1;
+            var tag = "<li class='food'>\
+                            <span style='margin-left:11px;'><b class='food-num'>"+number+"</b>.&nbsp;&nbsp;"+$(this).val()+"</span>\
+                            <span><input type='number' value='1' min='1' class='num' price='"+food_price+"'></span>\
+                            <span class='price'>"+food_price+"원</span>\
+                            <span class='glyphicon glyphicon-trash text-center delete-food' style='cursor:pointer;'></span>\
+                    </li>";
+            $("#food-list").append(tag);
+        }
     });
+    $(document).on("click",".delete-food",function(){
+        $(this).parent("li").remove();
+        if($(".food").length == 0){
+            $("#food-meta").css("display","none");
 
+        }
+        var n = 1;
+        for(var num of $(".food-num")){
+            $(num).text(n)
+            n++;
+        }
 
+    });
+    
+    $(document).on("change",".num",function(){
+        $("#total").text(getToatal());
+    });
+    function getToatal(){
+        var sum = 0;
+        for(var n of $(".num")){
+            sum+=(parseInt($(n).val())*parseInt($(n).attr("price")));
+        }
+        return sum;
+    }
 </script>
 </body>
 

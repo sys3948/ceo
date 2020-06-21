@@ -72,8 +72,8 @@
     <!--content-->
     <ul id="main-content">
         {% for recipe in recipes %}
-        <li>
-            <div class="img-section">
+        <li >
+            <div class="img-section" onclick="location.href='/detail_recipe/{{recipe.id}}/'">
                 <img src="/media/{{recipe.recipe_img_file_path}}" width="198" height="158">
                 <p class="opacity-text">{{recipe.recipe_kind}}</p>
             </div>
