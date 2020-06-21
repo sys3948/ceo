@@ -16,8 +16,27 @@ def main(request):
     recipes = Recipe.objects.all().order_by('-upload_date')
     
     return render(request,'main.html',{'recipes':recipes})
-def detail_recipe(request):
-    return render(request,'detail_recipe.html')    
+def detail_recipe(request,num):
+    recipe = get_object_or_404(Recipe,id=num)
+    realations = RFRealatoin.objects.filter(recipe=recipe)
+    storage = []
+    for realation in realations:
+        storage_name = realation.foodstuff.fsstorage.storage_name
+        if storage_name:
+            storage_doc = None
+            storage_img = realation.foodstuff.fsstorage.fss_img_file_path
+            url = realation.foodstuff.fsstorage.storage_file_path
+            with open(url,'r',encoding="utf-8") as f:
+                storage_doc = f.read()
+            storage.append([storage_name,storage_img,storage_doc])    
+
+    
+    context = {
+        'recipe':recipe,
+        'realations':realations,
+        'storage':storage
+    }
+    return render(request,'detail_recipe.html',context)    
 # 로그인
 def login(request):
     context = {}
