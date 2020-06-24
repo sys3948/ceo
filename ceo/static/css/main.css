@@ -44,7 +44,7 @@
 nav a{color:rgb(181,181,181); font-weight: bold; display: inline-block;}
 nav a:link { color:rgb(181,181,181);  text-decoration: none;}
 nav a:hover { color:rgb(181,181,181); text-decoration: none;}
-#main-content {
+#main-content, #storage-content {
     list-style: none;
     width:1200px;
     margin:0 auto;
@@ -56,6 +56,10 @@ nav a:hover { color:rgb(181,181,181); text-decoration: none;}
     margin-left:86px;
     margin-top:65px;
     float: left;
+}
+#storage-content li{
+    width:198px;
+    margin: 65px auto;
 }
 .img-section{
     width:198px;

@@ -76,15 +76,13 @@ def id_check(request):
         response ={ 'msg' : True}
     else:
         response = {'msg' : False}
-    print(response)
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def manage_register(request):
-    # user_id = check_login(request,'/')
-    if not request.session.get('id'):
-        return redirect('/')
-    account = get_object(Account,user_id=user_id)
-    if account.level != 2: return render(request,'main.html',{'msg':'권한이 없습니다.'})  
+    if not request.session.get('id'): return render(request,'main.html',{'msg':'로그인이 되어있지 않습니다. 로그인을 해주세요.'})
+    account = get_object(Account,user_id=request.session.get('id'))
+    if account.level != 2: return render(request,'main.html',{'msg':'권한이 없습니다.'})
     if request.method == "POST":
         Account.objects.create(
             user_id  = request.POST.get('user_id'),
@@ -103,17 +101,11 @@ class ManagerRecipeView(generic.ListView):
     template_name = 'manage_recipe.html'
 
 
-# class ManagerWriteRecipeView(generic.ListView):
-#     model = Recipe
-#     template_name = 'write_recipe.html'
-
-
 def ManagerWriteRecipeView(request):
-    user_id = check_login(request,'/')
-    account = get_object(Account,user_id=id)
-    #if account.level != 1 : return redirect('/')
+    if not request.session.get('id'): return render(request,'main.html',{'msg':'로그인이 되어있지 않습니다. 로그인을 해주세요.'})
+    account = get_object(Account,user_id=request.session.get('id'))
+    if account.level != 1: return render(request,'main.html',{'msg':'권한이 없습니다.'})
     if request.method == "POST":
-        print()
         recipe = Recipe.objects.create(
                     recipe_name=request.POST.get('title'),
                     rank = int(request.POST.get('rank')),
@@ -174,10 +166,6 @@ def ManagerStorageView(request):
     fsstorages = FSStorage.objects.all()
     return render(request, 'manage_storage.html', {'fsstorages' : fsstorages})
 
-# class ManagerWriteStorageView(generic.ListView):
-#     model = Recipe
-#     template_name = 'write_storage.html'
-
 
 def ManagerWriteStorageView(request):
     if request.method == 'POST':
@@ -185,7 +173,6 @@ def ManagerWriteStorageView(request):
         fds = FSStorage.objects.filter(foodstuff = request.POST.get('storageName'))
 
         if fds:
-            print("존재한다.")
             response = {'confirm' : False, 'msg' : "작성된 보관법입니다."}            
         else:
             fds = Foodstuff.objects.filter(id = request.POST.get('storageName'))
@@ -205,7 +192,16 @@ def ManagerWriteStorageView(request):
     return render(request, 'write_storage.html', {'foodstuffs' : foodstuffs})
 
 
-def ManagerStorageDetailView(request, id):
+def StorageShowListView(request):
+    fsstorages = FSStorage.objects.all()
+    print(fsstorages)
+    if not fsstorages:
+        return redirect('/')
+
+    return render(request, 'remain_foodstuff_storage_list.html', {'fsstorages' : fsstorages})
+
+
+def StorageDetailView(request, id):
     fss = FSStorage.objects.get(id = id)
     if not fss:
         return redirect('/')

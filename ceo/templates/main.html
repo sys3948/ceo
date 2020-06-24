@@ -22,11 +22,11 @@
 <body>
     <!--헤더-->
     <header>
-        <div style="float: left;">
+        <a href="{% url 'main' %}" style="float: left;">
             <img src="{% static 'img/icon.png' %}">
-        </div>
+        </a>
         <div id="header-center-section">
-            <a href="">남은 재료 보관방법</a>
+            <a href="{% url 'show_storage_list' %}">남은 재료 보관방법</a>
             <a href="">오늘의 인기레시피</a>
             <a href="">내가 가진 재료로 만들자</a>
         </div>
@@ -47,9 +47,7 @@
             <div id="nav-item-border">
                 
                 <!--디저트-->
-                <a href="" style="margin:0px; background-image: url('../static/img/nav_1.png');">
-                    <!-- <img src="{% static 'img/nav_1.png' %}"> -->
-                </a>
+                <a href="" style="margin:0px; background-image: url('../static/img/nav_1.png');"></a>
                 <!--밑반찬-->
                 <a href="" style="background-image: url('../static/img/nav_2.png');"></a>
                 <!--찌개-->

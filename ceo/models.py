@@ -30,9 +30,14 @@ class Foodstuff(models.Model):
     # 제료 정보 모델
     foodstuff_name = models.CharField(max_length = 100, db_index = True, unique = True)
     price = models.IntegerField()
+
+
 class RFRealatoin(models.Model):
+    # 레시피, 재료 다대다 관계를 위한 모델
     recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE)
     foodstuff = models.ForeignKey(Foodstuff, on_delete = models.CASCADE)
+
+    
 class FSStorage(models.Model):
     # 재료 보관법 모델
     foodstuff = models.OneToOneField(Foodstuff,on_delete=models.CASCADE,null=True,blank=True)

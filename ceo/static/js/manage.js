@@ -10,13 +10,17 @@ $(".menu-item").click(function(){
     if(keyword == "레시피등록") location.href="/manager/write/recipe";
     else if(keyword == "레시피관리") location.href="/manager/manage/recipe";
     else if(keyword == "보관방법작성") location.href="/manager/write/storage";
-    else  location.href="manage_storage.html";
+    else if(keyword == "보관방법관리") location.href="/manager/show/storage";
+    else if(keyword == "관리자등록") location.href="/manage/register";
+    else if(keyword == "관리자관리") alert('아직 구현하지 않은 페이지 입니다.');
+    else alert('오류가 발생했습니다.');
     
 
 });
 function check_slide(){
     
     for(var el of $(".menu-on-off")){
+        console.log(el);
         if($(el).attr("on-off").toLowerCase() == "on") slide(el,"off");
     }
 }

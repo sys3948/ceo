@@ -6,7 +6,7 @@
         {% for fsstorage in fsstorages %}
         <li>
             <div class="img-section">
-                <a href="/manager/show/storage/{{fsstorage.id}}">
+                <a href="/show/storage/{{fsstorage.id}}">
                     <img src="/media/{{fsstorage.fss_img_file_path}}" width="198" height="158">
                 </a>                
             </div>
@@ -20,5 +20,12 @@
         {% endfor %}
         
     </ul>
+    <script>
+        $("#storage").attr("on-off","on");
+        $("#manage-storage").css({
+            "background":"white",
+            "color":"black"
+        });
+    </script>
     <script src="{% static 'js/manage.js' %}"></script>
 {% endblock %}

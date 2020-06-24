@@ -31,10 +31,19 @@
     <nav class="col-md-2">
         <ul id="menu">
             
-             
-             <li id="manager_register" class="menu-on-off" on-off="off">
-                <span onclick="location.href='/manage/register/';">관리자등록</span>
+            <!-- 관리자 if 문을 이용해서 관리자와 시스템 관리자가 볼 부분 구현하기. -->
+            <li id="manager_register" class="menu-on-off" on-off="off">
+                <span class="menu-left">관리자</span>
+                <i class="glyphicon glyphicon-chevron-right"></i>
             </li>
+            <ul class="item-list">
+                <li id="write-manager"class="menu-item" value="관리자등록">
+                    관리자등록
+                </li>
+                <li id="manage-manager" class="menu-item" value="관리자관리">
+                    관라지관리
+                </li>
+            </ul>
             <!--레시피-->
             <li id="recipe" class="menu-on-off" on-off="off">
                 <span class="menu-left">레시피</span>
