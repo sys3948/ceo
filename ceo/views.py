@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.views import generic
 import json
 from .file_func import create_file
+from django.contrib import messages
 
 from .models import *
 
@@ -10,25 +11,34 @@ from .models import *
 def get_object(model,**args):
     query_set = model.objects.filter(**args)
     return query_set[0] if query_set else None
+# 로그인 체크
+def isLogin(request,**args):
     
+    if not request.session.get('id'): 
+        messages.info(request, '로그인 하세요.')
+        return '/login'
+    if args.get('level'):    
+        account = get_object(Account,user_id=request.session.get('id'))
+        if  account.level != args.get('level'): 
+            messages.info(request, '권한이 없습니다.')
+            return '/' 
+
 # Create your views here.
 def main(request):
     recipes = Recipe.objects.all().order_by('-upload_date')
     
     return render(request,'main.html',{'recipes':recipes})
+#레시피 상세보기    
 def detail_recipe(request,num):
     recipe = get_object_or_404(Recipe,id=num)
     realations = RFRealatoin.objects.filter(recipe=recipe)
     storage = []
     for realation in realations:
-        storage_name = realation.foodstuff.fsstorage.storage_name
-        if storage_name:
-            storage_doc = None
-            storage_img = realation.foodstuff.fsstorage.fss_img_file_path
-            url = realation.foodstuff.fsstorage.storage_file_path
-            with open(url,'r',encoding="utf-8") as f:
-                storage_doc = f.read()
-            storage.append([storage_name,storage_img,storage_doc])    
+        try:
+            obj = realation.foodstuff.fsstorage
+            storage.append(obj)
+        except Exception as e:
+            pass        
 
     
     context = {
@@ -46,14 +56,19 @@ def login(request):
         account = Account.objects.filter(user_id=user_id,password=user_pw)
         if account:
             request.session['id']=user_id
+            request.session['level']=account[0].level
             return redirect('/')
+            
         else:
-            context['lgmsg'] = "아이디와 비밀번호가 일치하지 않습니다." 
+            messages.info(request, '아이디와 비밀번호 일치하지 않습니다.')
+            return redirect('/login')
+        
     return render(request,'login.html',context)
 
 #로그아웃 
 def logout(request):
     del request.session['id']   
+    del request.session['level']   
     return redirect('/')
 # 회원가입 
 def register(request):
@@ -66,6 +81,7 @@ def register(request):
             phonenumber = request.POST.get('user_phone'),
         )
         return redirect('/login/')
+
     return render(request,'register.html')
 #아이디 체크
 def id_check(request):
@@ -73,16 +89,15 @@ def id_check(request):
     account = Account.objects.filter(user_id=user_id)
     response = {}
     if account:
-        response ={ 'msg' : True}
+        response ={ 'msg' : False}
     else:
-        response = {'msg' : False}
+        response = {'msg' : True}
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def manage_register(request):
-    if not request.session.get('id'): return render(request,'main.html',{'msg':'로그인이 되어있지 않습니다. 로그인을 해주세요.'})
-    account = get_object(Account,user_id=request.session.get('id'))
-    if account.level != 2: return render(request,'main.html',{'msg':'권한이 없습니다.'})
+    path = isLogin(request,level=2)
+    if path : return redirect(path)
     if request.method == "POST":
         Account.objects.create(
             user_id  = request.POST.get('user_id'),
@@ -101,10 +116,12 @@ class ManagerRecipeView(generic.ListView):
     template_name = 'manage_recipe.html'
 
 
+  
+#레시피 작성    
 def ManagerWriteRecipeView(request):
-    if not request.session.get('id'): return render(request,'main.html',{'msg':'로그인이 되어있지 않습니다. 로그인을 해주세요.'})
-    account = get_object(Account,user_id=request.session.get('id'))
-    if account.level != 1: return render(request,'main.html',{'msg':'권한이 없습니다.'})
+    path = isLogin(request,level=1)
+    if path : return redirect(path)
+
     if request.method == "POST":
         recipe = Recipe.objects.create(
                     recipe_name=request.POST.get('title'),
@@ -134,11 +151,16 @@ def ManagerWriteRecipeView(request):
     return render(request, 'write_recipe.html')
 
 
+#레시피 관리
 def manage_recipe(request):
+    path = isLogin(request,level=1)
+    if path : return redirect(path)
     recipes = Recipe.objects.all().order_by('-upload_date')
-    
     return render(request, 'manage_recipe.html',{'recipes':recipes})
+#레시피 수정    
 def modify_recipe(request):
+    path = isLogin(request,level=1)
+    if path : return redirect(path)
     pk = request.GET.get('id')
     recipe = get_object_or_404(Recipe,id=pk)
     realation_list = RFRealatoin.objects.filter(recipe=recipe)
@@ -161,13 +183,18 @@ class ManagerStorageView(generic.ListView):
     model = Recipe
     template_name = 'manage_storage.html'
 
-
+#재료 보관 방법 보기
 def ManagerStorageView(request):
+    path = isLogin(request,level=1)
+    if path : return redirect(path)
     fsstorages = FSStorage.objects.all()
     return render(request, 'manage_storage.html', {'fsstorages' : fsstorages})
 
-
+# 재료 보관 방법 작성
 def ManagerWriteStorageView(request):
+    path = isLogin(request,level=1)
+    if path : return redirect(path)
+
     if request.method == 'POST':
         
         fds = FSStorage.objects.filter(foodstuff = request.POST.get('storageName'))
@@ -177,6 +204,7 @@ def ManagerWriteStorageView(request):
         else:
             fds = Foodstuff.objects.filter(id = request.POST.get('storageName'))
             filepath = create_file(fds[0].foodstuff_name, request.POST.get('storageDoc'))
+
             FSStorage.objects.create(
                 foodstuff_id = request.POST.get('storageName'),
                 storage_name = fds[0].foodstuff_name,
@@ -193,15 +221,17 @@ def ManagerWriteStorageView(request):
 
 
 def StorageShowListView(request):
+    
     fsstorages = FSStorage.objects.all()
-    print(fsstorages)
     if not fsstorages:
+        messages.info(request, '재료 보관방법이 없습니다.')
         return redirect('/')
 
     return render(request, 'remain_foodstuff_storage_list.html', {'fsstorages' : fsstorages})
 
 
 def StorageDetailView(request, id):
+    
     fss = FSStorage.objects.get(id = id)
     if not fss:
         return redirect('/')

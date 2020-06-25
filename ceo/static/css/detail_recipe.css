@@ -1,0 +1,53 @@
+#con{
+    width:1200px;
+    margin:0 auto;
+}
+#info{
+    width:100%;
+    
+}
+#rec-img-section{
+    width:46%;
+    
+    float: left;
+}
+#rec-info{
+    width:54%;
+    
+    margin-left: 46%;
+}
+#food-list{
+    list-style: none;
+    width: 100%;
+    background: #e0e0e0;
+    
+}
+#food-list li span{
+    display: inline-block;
+    width:145px;
+    font-size: 15px;;
+    font-weight: bold;
+}
+#food-list li input{
+    width:50px;
+}
+#food-list li{
+    padding:22px;
+    border-bottom: 1px solid gray;
+}
+#food-meta span{
+    
+    font-size: 16px;
+    font-weight: bold;
+}
+#buy-btn{
+    width:100px;
+    height:30px;
+    background: black;
+    color:white;
+    font-weight: bold;
+    text-align: center;
+    line-height: 30px;
+    margin-left:550px;
+    margin-top:20px;
+}

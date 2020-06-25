@@ -1,26 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-    <!--header css-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
-    <!--login css-->
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
-</head>
-<body>
-    {% if lgmsg %}
-        <script>alert("{{lgmsg}}");</script>
-    {% endif %}
-    <header>
-        <div>
-            <img src="{% static 'img/icon.png' %}">
-        </div>
-    </header>
+{% extends 'base2.html' %}
+{% load static %}
+{% block title %} 로그인 {% endblock %}
+{% block content %}
+{% if messages %}
+    {% for msg in messages %} 
+        <script>alert("{{msg}}");</script>
+    {% endfor %}   
+	
+{% endif %}
+ <!--login css-->
+ <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    
     <div id="container">
 
         <p class="title">
@@ -41,5 +31,4 @@
         <a href="{% url 'register' %}">회원가입</a>
         <a href="">아이디찾기/비밀번호찾기</a>
     </div>
-</body>
-</html>
+{% endblock %}

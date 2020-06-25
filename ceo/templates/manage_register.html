@@ -37,6 +37,11 @@
         <input type="submit" value="회원가입" id="submit">
     </form>
     <script>
+         $("#manager_register").attr("on-off","on");
+        $("#write-manager").css({
+            "background":"white",
+            "color":"black"
+        });
         //아이디 체크
         $("#check-btn").click(function(){
             if($("#user-id").val() != ''){
@@ -72,5 +77,7 @@
         });
         
     </script>   
+    <script src="{% static 'js/manage.js' %}"></script>
+    <script src="{% static 'js/write.js' %}"></script>
 </div>
 {% endblock %}

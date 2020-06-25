@@ -1,104 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
-        
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-
-    <!-- jQuery -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
-    <!--header css-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/register.css' %}">
-</head>
-<body>
-    <header>
-        <div>
-            <img src="{% static 'img/icon.png' %}">
-        </div>
-    </header>
-    <div id="container">
-        <h2 class="text-center">회원가입</h2>
-        <form id="form" action="{% url 'register' %}" method="POST">
-            {% csrf_token %}
-            <h4>아이디</h4>
-            <input id="user-id" type="text" name="user_id" class="form-control" required>
-            <p id="id_error_text"></p>
-            <div id="check-btn">중복확인</div>
-            <h4>비밀번호</h4>
-            <input type="password" id="pwd" name="user_pwd" class="form-control" required>
-            <h4>비밀번호 확인</h4>
-            <input type="password" id="pwd2" class="form-control" required>
-            <p id="pw-error-text" style="display: none; color:red;">비밀번호가 일치하지 않습니다.</p>
-            <h4>이메일</h4>
-            <input type="email" class="form-control" id="email" name="user_email" required>
-            <h4>전화번호</h4>
-            <!-- <div class="input-group">
-                <input type="text" class="form-control">
-                <div class="input-group-btn">
-                    <button class="btn btn-default">
-                        인증
-                    </button>
-                </div>
-            </div> -->
-            <input type="text" class="form-control" name="user_phone" placeholder="전화번호" required>
-            <h4>이름</h4>
-            <input type="text" class="form-control" name="user_name" required>
-            <h4>이용약관</h4>
-            <div id="terms-use">
-                제1조(목적)<br>
-                <br>
-                본 회원약관은 C.E.O(이하 '갑'라 한다)이 운영하는 <br>
-                인터넷관련 서비스(이하 '서비스'라 한다)를 이용함에 있어<br> 
-                관리자와 이용자(이하 '회원'라 한다)의 권리, 의무 및 책임사항을 <br>
-                규정함을 목적으로 한다.<br>
-                제2조 (약관의 효력)    
-            
+{% extends 'base2.html' %}
+{% load static %}
+{% block title %}회원가입{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+<div id="container">
+    <h2 class="text-center">회원가입</h2>
+    <form id="form" action="{% url 'register' %}" method="POST" onsubmit="return isValid();">
+        {% csrf_token %}
+        <h4>아이디</h4>
+        <input id="user-id" type="text" name="user_id" class="form-control" required>
+        <p id="id_error_text"></p>
+        <div id="check-btn">중복확인</div>
+        <h4>비밀번호</h4>
+        <input type="password" id="pwd" name="user_pwd" class="form-control" required>
+        <h4>비밀번호 확인</h4>
+        <input type="password" id="pwd2" class="form-control" required>
+        <p id="pw-error-text" style="display: none; color:red;">비밀번호가 일치하지 않습니다.</p>
+        <h4>이메일</h4>
+        <input type="email" class="form-control" id="email" name="user_email" required>
+        <h4>전화번호</h4>
+        <!-- <div class="input-group">
+            <input type="text" class="form-control">
+            <div class="input-group-btn">
+                <button class="btn btn-default">
+                    인증
+                </button>
             </div>
-            <input type="radio" name="radio" required> <span style="font-weight: bold;">이용약관 동의합니다.</span><br>
-            <input type="submit" value="회원가입" id="submit">
-        </form>
+        </div> -->
+        <input type="text" class="form-control" name="user_phone" placeholder="전화번호" required>
+        <h4>이름</h4>
+        <input type="text" class="form-control" name="user_name" required>
+        <h4>이용약관</h4>
+        <div id="terms-use">
+            제1조(목적)<br>
+            <br>
+            본 회원약관은 C.E.O(이하 '갑'라 한다)이 운영하는 <br>
+            인터넷관련 서비스(이하 '서비스'라 한다)를 이용함에 있어<br> 
+            관리자와 이용자(이하 '회원'라 한다)의 권리, 의무 및 책임사항을 <br>
+            규정함을 목적으로 한다.<br>
+            제2조 (약관의 효력)    
         
-    </div>
-    <script>
-        //아이디 체크
-        $("#check-btn").click(function(){
-            if($("#user-id").val() != ''){
-              $.ajax({
-                  type : "POST",
-                  url : "{% url 'idCheck' %}",
-                  data : {
-                      'csrfmiddlewaretoken': '{{ csrf_token }}',
-                      'id_check' : $("#user-id").val(),
-                  }, 
-                  success : function(response)
-                  {
-                    
-                    if(!response['msg'])
-                      $("#id_error_text").text("아이디 사용 가능합니다.").css("color","#0081ff");
-                    else 
-                      $("#id_error_text").text("아이디 사용 불가능합니다.").css("color","red");
-
-                    result = response['msg']
-                    
-                  },
-                });
-           }
-        });
-        $("#pwd2").focusout(function(){
-            if($("#pwd").val() == $("pwd2").val()){
-                $("#pw-error-text").css("display","block");
-                
-            }else{
-                $("#pw-error-text").css("display","none");
-                
-            }
-        });
-        
-    </script>    
-</body>
-</html>
+        </div>
+        <input id="agree-radio" type="radio" name="radio" required> <label for="agree-radio">이용약관 동의합니다.</label><br>
+        <input type="submit" value="회원가입" id="submit">
+    </form>
+    
+</div>
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock %}
