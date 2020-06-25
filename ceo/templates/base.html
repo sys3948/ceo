@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} {% endblock %}</title>
+    <!--부트스트랩-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <!--header css-->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <!--제이쿼리-->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    
+    
+</head>
+<body>
+    <!--헤더-->
+    <header>
+        <a href="{% url 'main' %}" style="float: left;">
+            <img src="{% static 'img/icon.png' %}" onclick="location.href='/';" style="cursor: pointer;">
+        </a>
+        <div id="header-center-section">
+            <a href="{% url 'show_storage_list' %}">남은 재료 보관방법</a>
+            <a href="">오늘의 인기레시피</a>
+            <a href="">내가 가진 재료로 만들자</a>
+        </div>
+        <diV id="header-right-section">
+            <i class="glyphicon glyphicon-search" style="color:rgb(181,181,181); cursor: pointer; font-size: 16px;"></i>
+            {% if request.session.id %}
+                <a href="{% url 'logout' %}" >로그아웃</a>
+            {% else %}    
+                <a href="{% url 'login' %}" >로그인</a>
+            {% endif %}
+            <a href="">장바구니</a>
+        </diV>
+    </header>
+    
+    
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>

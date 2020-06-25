@@ -9,7 +9,7 @@ def change_filename(filename):
 def create_file(filename, content):
     try:
         filename = change_filename(filename) + '.html'
-        path = os.path.abspath("media/fs_storage/doc")
+        path = "media/fs_storage/doc"
         f = open(os.path.join(path, filename), 'wt', encoding='utf-8')
         f.write(content)
         f.close()

@@ -17,21 +17,23 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <link href="{% static 'css/write.css' %}" rel="stylesheet">
-    <style> nav{ height: 130%;;}</style>
+    <style> nav{ height: 140%;}</style>
 </head>
 <body>
     <!--헤더-->
     <header>
         <div>
-            <img src="{% static 'img/icon.png' %}">
-            <a href="" id="logout">로그아웃</a>
+            <img src="{% static 'img/icon.png' %}" onclick="location.href='/';" style="cursor: pointer;">
+            <a href="{% url 'login' %}" id="logout">로그아웃</a>
         </div>
     </header>
+    
     <!--네비게이션-->
     <nav class="col-md-2">
         <ul id="menu">
             
             <!-- 관리자 if 문을 이용해서 관리자와 시스템 관리자가 볼 부분 구현하기. -->
+            {% if request.session.level == 2 %}
             <li id="manager_register" class="menu-on-off" on-off="off">
                 <span class="menu-left">관리자</span>
                 <i class="glyphicon glyphicon-chevron-right"></i>
@@ -44,6 +46,9 @@
                     관라지관리
                 </li>
             </ul>
+            {% else %}
+            
+
             <!--레시피-->
             <li id="recipe" class="menu-on-off" on-off="off">
                 <span class="menu-left">레시피</span>
@@ -71,6 +76,7 @@
                     보관방법관리
                 </li>
             </ul>
+            {% endif %}
         </ul>
     </nav>
     <!--내용-->
