@@ -62,8 +62,11 @@
             var exd_list = ["mkv","avi","mp4","mpg","flv","wmv","asf","asx","orm","ogv","mov"];
             var path = file.value;
             var extend = path.slice(path.indexOf(".") + 1).toLowerCase(); 
-            if(exd_list.indexOf(extend)){
+            if(!exd_list.indexOf(extend)){
                 alert("동영상 파일이 아닙니다.");
+            }
+            else{
+                document.getElementById('file-name').innerHTML = path;
             }
         }
         function isVaild(){
