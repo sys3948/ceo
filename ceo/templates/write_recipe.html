@@ -8,23 +8,26 @@
         <form   action="{% url 'write_recipe' %}" method="POST" enctype="multipart/form-data" onsubmit="return isVaild();">
             {% csrf_token %}
             <h4>제목</h4>
-            <input type="text" name="title" id="recipe_name" class="form-control">
+            <input type="text" name="title" id="recipe_name" class="form-control" required>
             <h4>열량 & 영양정보</h4>
             <div class="summernote" id="summ-info"></div>
-            <input type="hidden" id="info" name="info">
+            <input type="hidden" id="info" value="" name="info">
             <h4>레시피</h4>
-            <input type="file" accept="image/*" id="imgFile" class="upload-file" name="recipe_img"/>
+            <input type="file" accept="image/*" id="imgFile" class="upload-file" name="recipe_img" required/>
             <label for="imgFile" class="upload-btn">레시피이미지</label>
             <img id="previewImg" src="" />
 
            
             <input type="file" accept="video/*" name="recipe_video" id="storageVideo" class="upload-file" onchange="check_file(this);"/>
             <label for="storageVideo" class="upload-btn">동영상업로드</label>
+            <p style="font-weight: bold; color:blue;">
+                확장자 .ogg , .webm , .mp4 파일만 지원됩니다.
+            </p>
             <p id="file-name"></p>
             <div class="summernote" id="summ-recipe-info"></div>
-            <input type="hidden" id="recipe-info" name="recipe_info">
+            <input type="hidden" id="recipe-info" value="" name="recipe_info">
             <h4>재료</h4>
-            <input type="text" id="foodStuff" class="form-control" name="food" placeholder="재료명1,재료명2,재료명3">
+            <input type="text" id="foodStuff" class="form-control" name="food" placeholder="재료명1,재료명2,재료명3" required>
             <h4>레시피종류</h4>
             <select class="form-control" name="kind">
                 <option value="디저트">디저트</option>
@@ -59,11 +62,11 @@
 
         function check_file(file){
             //	*.mkv *.avi *.mp4 *.mpg *.flv *.wmv *.asf *.asx *.ogm *.ogv *.mov
-            var exd_list = ["mkv","avi","mp4","mpg","flv","wmv","asf","asx","orm","ogv","mov"];
+            var exd_list = ["mp4","ogg","webm"];
             var path = file.value;
             var extend = path.slice(path.indexOf(".") + 1).toLowerCase(); 
-            if(!exd_list.indexOf(extend)){
-                alert("동영상 파일이 아닙니다.");
+            if(exd_list.indexOf(extend) == -1){
+                alert("동영상을 업로드 할수 없습니다.");
             }
             else{
                 document.getElementById('file-name').innerHTML = path;
@@ -72,10 +75,17 @@
         function isVaild(){
             var summ_info = $('#summ-info').summernote('code');
             var summ_recipe_info = $("#summ-recipe-info").summernote('code');
-            console.log(summ_recipe_info);
+            var tag = $(".note-editable");
+            if($(tag[0]).text() == ""){
+                alert("열량 & 영양정보 입력해주세요.");
+                return false;
+            } 
+            if($(tag[1]).text() == ""){
+                alert("레시피정보 입력해주세요.");
+                return false;
+            } 
             $("#info").val(summ_info);
             $("#recipe-info").val(summ_recipe_info);
-            
             return true;
         }
     </script>

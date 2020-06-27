@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'css/register.css' %}">
 <div id="content" class="col-md-8">
     <h2 class="text-center">관리자 등록</h2>
-    <form id="form" action="{% url 'manage_register' %}" method="POST">
+    <form id="form" action="{% url 'manage_register' %}" method="POST" onsubmit="return isValid();">
         {% csrf_token %}
         <h4>아이디</h4>
         <input id="user-id" type="text" name="user_id" class="form-control" required>
@@ -42,42 +42,38 @@
             "background":"white",
             "color":"black"
         });
-        //아이디 체크
-        $("#check-btn").click(function(){
+        
+        function userIdCheck(){
+            var result=false;
+            
             if($("#user-id").val() != ''){
-              $.ajax({
-                  type : "POST",
-                  url : "{% url 'idCheck' %}",
-                  data : {
-                      'csrfmiddlewaretoken': '{{ csrf_token }}',
-                      'id_check' : $("#user-id").val(),
-                  }, 
-                  success : function(response)
-                  {
+                $.ajax({
+                    type : "POST",
+                    url : "/idCheck/",
+                    async: false,
+                    data : {
+                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                        'id_check' : $("#user-id").val(),
+                    }, 
+                    success : function(response)
+                    {
                     
-                    if(!response['msg'])
-                      $("#id_error_text").text("아이디 사용 가능합니다.").css("color","#0081ff");
+                    if(response['msg'])
+                        $("#id_error_text").text("아이디 사용 가능합니다.").css("color","#0081ff");
                     else 
-                      $("#id_error_text").text("아이디 사용 불가능합니다.").css("color","red");
+                        $("#id_error_text").text("아이디 사용 불가능합니다.").css("color","red");
 
-                    result = response['msg']
-                    
-                  },
+                        result = response['msg'];    
+                    },
                 });
-           }
-        });
-        $("#pwd2").focusout(function(){
-            if($("#pwd").val() == $("pwd2").val()){
-                $("#pw-error-text").css("display","block");
                 
-            }else{
-                $("#pw-error-text").css("display","none");
-                
+                return result;
             }
-        });
+    }
         
     </script>   
     <script src="{% static 'js/manage.js' %}"></script>
     <script src="{% static 'js/write.js' %}"></script>
+    <script src="{% static 'js/register.js' %}"></script>
 </div>
 {% endblock %}
