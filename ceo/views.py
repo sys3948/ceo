@@ -147,7 +147,7 @@ def ManagerWriteRecipeView(request):
                 recipe=recipe,
                 foodstuff=food_obj
             )
-
+        return redirect('/manager/manage/recipe')
     return render(request, 'write_recipe.html')
 
 

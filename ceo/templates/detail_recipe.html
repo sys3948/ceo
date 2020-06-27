@@ -48,8 +48,9 @@
     <div style="width:300px; margin:0 auto; margin-top:100px;">
         <video controls width="300" class="text-center" >
 
-            <source src="/media/{{recipe.video_file_path}}"
-                    type="video/*">
+            <source src="/media/{{recipe.video_file_path}}" type="video/mp4">
+            <source src="/media/{{recipe.video_file_path}}" type="video/ogg"> 
+            <source src="/media/{{recipe.video_file_path}}" type="video/webm">        
         
             <!-- <source src="/media/{{recipe.video_file_path}}"
                     type="video/mp4"> -->
