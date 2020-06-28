@@ -11,6 +11,8 @@ from .models import *
 def get_object(model,**args):
     query_set = model.objects.filter(**args)
     return query_set[0] if query_set else None
+
+
 # 로그인 체크
 def isLogin(request,**args):
     
@@ -22,12 +24,15 @@ def isLogin(request,**args):
         if  account.level != args.get('level'): 
             messages.info(request, '권한이 없습니다.')
             return '/' 
+            
 
 # Create your views here.
 def main(request):
     recipes = Recipe.objects.all().order_by('-upload_date')
     
     return render(request,'main.html',{'recipes':recipes})
+
+
 #레시피 상세보기    
 def detail_recipe(request,num):
     recipe = get_object_or_404(Recipe,id=num)
@@ -46,7 +51,9 @@ def detail_recipe(request,num):
         'realations':realations,
         'storage':storage
     }
-    return render(request,'detail_recipe.html',context)    
+    return render(request,'detail_recipe.html',context)   
+
+
 # 로그인
 def login(request):
     context = {}
@@ -65,11 +72,14 @@ def login(request):
         
     return render(request,'login.html',context)
 
+
 #로그아웃 
 def logout(request):
     del request.session['id']   
     del request.session['level']   
     return redirect('/')
+
+
 # 회원가입 
 def register(request):
     if request.method == "POST":
@@ -83,7 +93,7 @@ def register(request):
         return redirect('/login/')
 
     return render(request,'register.html')
-#아이디 체크
+# 아이디 체크
 def id_check(request):
     user_id = request.POST.get('id_check')
     account = Account.objects.filter(user_id=user_id)
@@ -95,6 +105,8 @@ def id_check(request):
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 
+
+# 관리자 등록
 def manage_register(request):
     path = isLogin(request,level=2)
     if path : return redirect(path)
@@ -109,15 +121,10 @@ def manage_register(request):
         )
         return redirect('/')
 
-    return render(request,'manage_register.html')  
-        
-class ManagerRecipeView(generic.ListView):
-    model = Recipe
-    template_name = 'manage_recipe.html'
+    return render(request,'manage_register.html')          
 
 
-  
-#레시피 작성    
+# 레시피 작성    
 def ManagerWriteRecipeView(request):
     path = isLogin(request,level=1)
     if path : return redirect(path)
@@ -151,46 +158,47 @@ def ManagerWriteRecipeView(request):
     return render(request, 'write_recipe.html')
 
 
-#레시피 관리
+# 레시피 관리
 def manage_recipe(request):
     path = isLogin(request,level=1)
     if path : return redirect(path)
     recipes = Recipe.objects.all().order_by('-upload_date')
     return render(request, 'manage_recipe.html',{'recipes':recipes})
-#레시피 수정    
-def modify_recipe(request):
-    path = isLogin(request,level=1)
-    if path : return redirect(path)
-    pk = request.GET.get('id')
-    recipe = get_object_or_404(Recipe,id=pk)
-    realation_list = RFRealatoin.objects.filter(recipe=recipe)
-    url = str(recipe.nutrition_document_file_path)
-    url2= str(recipe.document_file_path)
-    nur_doc = None
-    rec_doc = None
-    with open(url, "r",encoding="UTF-8") as f:
-        nur_doc=f.read()
-    with open(url2, "r",encoding="UTF-8") as f:
-        rec_doc=f.read()    
-    context = {
-        'relation_list':realation_list,
-        'recipe':recipe,
-        'nur_doc':nur_doc,
-        'rec_doc':rec_doc
-    }
-    return render(request, 'modify_recipe.html',context)
-class ManagerStorageView(generic.ListView):
-    model = Recipe
-    template_name = 'manage_storage.html'
 
-#재료 보관 방법 보기
+
+# 레시피 수정 뷰함수인데 구현에 예상치 못 한 에러 발생해서 추후 확인 후 구현하기.
+# def modify_recipe(request):
+#     path = isLogin(request,level=1)
+#     if path : return redirect(path)
+#     pk = request.GET.get('id')
+#     recipe = get_object_or_404(Recipe,id=pk)
+#     realation_list = RFRealatoin.objects.filter(recipe=recipe)
+#     url = str(recipe.nutrition_document_file_path)
+#     url2= str(recipe.document_file_path)
+#     nur_doc = None
+#     rec_doc = None
+#     with open(url, "r",encoding="UTF-8") as f:
+#         nur_doc=f.read()
+#     with open(url2, "r",encoding="UTF-8") as f:
+#         rec_doc=f.read()    
+#     context = {
+#         'relation_list':realation_list,
+#         'recipe':recipe,
+#         'nur_doc':nur_doc,
+#         'rec_doc':rec_doc
+#     }
+#     return render(request, 'modify_recipe.html',context)
+
+
+# 재료 보관 방법 관리
 def ManagerStorageView(request):
     path = isLogin(request,level=1)
     if path : return redirect(path)
     fsstorages = FSStorage.objects.all()
     return render(request, 'manage_storage.html', {'fsstorages' : fsstorages})
 
-# 재료 보관 방법 작성
+
+# 재료 보관 방법 등록
 def ManagerWriteStorageView(request):
     path = isLogin(request,level=1)
     if path : return redirect(path)
@@ -220,6 +228,7 @@ def ManagerWriteStorageView(request):
     return render(request, 'write_storage.html', {'foodstuffs' : foodstuffs})
 
 
+# 남은 재료 보관 방법
 def StorageShowListView(request):
     
     fsstorages = FSStorage.objects.all()
@@ -230,10 +239,12 @@ def StorageShowListView(request):
     return render(request, 'remain_foodstuff_storage_list.html', {'fsstorages' : fsstorages})
 
 
+#  재료 보관 방법
 def StorageDetailView(request, id):
     
     fss = FSStorage.objects.get(id = id)
     if not fss:
+        messages.info(request, '해당 재료 보관방법이 없습니다.')
         return redirect('/')
 
     return render(request, 'show_storage.html', {"fsstorage" : fss})

@@ -8,10 +8,10 @@
     <li>
         <div class="img-section">
             <img src="/media/{{recipe.recipe_img_file_path}}" width="198" height="158">
-            <p class="opacity-text">디저트</p>
+            <p class="opacity-text">{{recipe.recipe_kind}}</p>
         </div>
         <div class="text-center">
-            <button class="btn btn-info" onclick="location='/manager/modify/recipe?id={{recipe.pk}}'">수정</button>
+            <button class="btn btn-info">수정</button>
             <button class="btn btn-danger">삭제</button>    
         </div>
         
