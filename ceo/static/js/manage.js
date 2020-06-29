@@ -8,7 +8,7 @@ $(".menu-on-off").click(function(){
 $(".menu-item").click(function(){
     var keyword = $(this).attr("value");
     if(keyword == "레시피등록") location.href="/manager/write/recipe";
-    else if(keyword == "레시피관리") location.href="/manager/manage/recipe";
+    else if(keyword == "레시피관리") location.href="/manager/show/recipe";
     else if(keyword == "보관방법작성") location.href="/manager/write/storage";
     else if(keyword == "보관방법관리") location.href="/manager/show/storage";
     else if(keyword == "관리자등록") location.href="/manage/register";
