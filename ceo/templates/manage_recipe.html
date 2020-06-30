@@ -7,8 +7,10 @@
     {% for recipe in recipes %}
     <li>
         <div class="img-section">
-            <img src="/media/{{recipe.recipe_img_file_path}}" width="198" height="158">
-            <p class="opacity-text">{{recipe.recipe_kind}}</p>
+            <a href="/detail_recipe/{{recipe.id}}/">
+                <img src="/media/{{recipe.recipe_img_file_path}}" width="198" height="158">
+                <p class="opacity-text">{{recipe.recipe_kind}}</p>
+            </a>
         </div>
         <div class="text-center">
             <button class="btn btn-info">수정</button>
